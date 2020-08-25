@@ -1,2 +1,4 @@
 # Song_player
-simple GUI song player
+Simple Static GUI song player
+
+- ROTBOW
