@@ -1,40 +1,41 @@
 from playsound import playsound
+from functools import partial
 import tkinter as tk
+import os, sys
 
-def close():
-    main.destroy()
+local_file = os.path.join(sys.path[0])
+song_local = local_file + '/songs/'
+song_list = os.listdir(local_file + '/songs/')
 
 # function that opens the interface for playing songs
 def view_songs():
-    slist = open('songlist.txt', 'r');song = slist.read();songs = song.split('\n')
-    slist.close()
-    count = len(songs)
-    main.destroy(); listing = tk.Tk(); listing.title('Song List')
+    count = len(song_list)
+    listing = tk.Tk(); listing.title('Song List')
     f1 = tk.Frame(master = listing,
                   relief = tk.RAISED,
                   borderwidth = 5
                   );f1.pack()
-    for i in range(count):
-        l1 = tk.Label(master = f1, width = 20, height = 1, relief = tk.SOLID,
-                      text = songs[i], borderwidth = 1)
-        l1.grid(row = i, column = 0)
-    b1 = tk.Button(master = f1, width = 30, height = 1, text = 'Play')
-    b1.grid(row = 0, column = 1)
-    
-    def play_song1(event):
-        playsound('song_1.mp3', False)
-    b1.bind('<Button-1>', play_song1)
-    
-    b2 = tk.Button(master = f1, width = 30, height = 1, text = 'Play')
-    b2.grid(row = 1, column = 1)
-    
-    def play_song2(event):
-        playsound('song_2.mp3', False)
-    b2.bind('<Button-1>', play_song2)
+    def play(x):
+            song_name = button[x].cget('text')
+            playsound(song_local + song_name, False)
+
+    button = list()
+    for i, song in zip(range(count), song_list):
+        buttom_name = 'b'+str(i)
+        
+        button.append(tk.Button(master = f1,
+                                 width = 30,
+                                 height = 1,
+                                 text = song_list[i],
+                                 command = partial(play,i)))
+        button[-1].grid(row = i, column = 1)
   
     
 # function that opens the menu of the program
 def menu():
+
+    def close():
+        main.destroy()
 
     main = tk.Tk(); main.title('Bear Music Player')
 
